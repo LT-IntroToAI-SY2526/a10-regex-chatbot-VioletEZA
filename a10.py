@@ -134,13 +134,48 @@ def get_occupations(name: str) -> list[str]:
     """
     infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
 
-    pattern = r"Occupation[s]?\s*(?P<occ>[\w\s,/\-–]+)"
+    pattern = r"Occupation[s]?\s*(?P<occupation>[\w\s,/\-–]+?)Years active"
     error_text = "Page infobox has no occupation information"
 
     match = get_match(infobox_text, pattern, error_text)
 
-    return match.group("occ")
+    return match.group("occupation")
 
+def get_origin(name: str) -> list[str]:
+    """Gets origin of the given person
+
+    Args:
+        name: name of the person
+
+    Returns:
+        A list of origins
+    """
+    infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
+    print(infobox_text)
+    pattern = r"Origin[s]?\s*(?P<origin>[\w\s,/\-–]+?)Genre"
+    error_text = "Page infobox has no occupation information"
+
+    match = get_match(infobox_text, pattern, error_text)
+
+    return match.group("origin")
+
+def get_genres(name: str) -> list[str]:
+    """Gets genres of the given person
+
+    Args:
+        name: name of the person
+
+    Returns:
+        A list of occupations
+    """
+    infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
+
+    pattern = r"Genre[s]?\s*(?P<genres>[\w\s,/\-–]+?)Instrument"
+    error_text = "Page infobox has no occupation information"
+
+    match = get_match(infobox_text, pattern, error_text)
+
+    return match.group("genres")
 
 
 # below are a set of actions. Each takes a list argument and returns a list of answers
@@ -181,6 +216,28 @@ def occupations(matches: List[str]) -> List[str]:
     """
     return [get_occupations(" ".join(matches))]
 
+def origin(matches: List[str]) -> List[str]:
+    """Returns origin from a named person in matches
+
+    Args:
+        matches - match from a pattern of person's name to find origin of
+
+    Returns:
+        origin of named person
+    """
+    return [get_origin(" ".join(matches))]
+
+def genres(matches: List[str]) -> List[str]:
+    """Returns genres from a named person in matches
+
+    Args:
+        matches - match from a pattern of person's name to find genre of
+
+    Returns:
+        genres of named person
+    """
+    return [get_genres(" ".join(matches))]
+
 
 def polar_radius(matches: List[str]) -> List[str]:
     """Returns polar radius of planet in matches
@@ -210,6 +267,8 @@ pa_list: List[Tuple[Pattern, Action]] = [
     ("when was % born".split(), birth_date),
     ("when did % die".split(), death_date),
     ("what are the occupations of %".split(), occupations),
+     ("what is the origin of %".split(), origin),
+    ("what are the genres of %".split(), genres),
     ("what is the polar radius of %".split(), polar_radius),
     (["bye"], bye_action),
 ]
