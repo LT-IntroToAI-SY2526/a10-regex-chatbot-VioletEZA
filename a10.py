@@ -151,7 +151,7 @@ def get_origin(name: str) -> list[str]:
         A list of origins
     """
     infobox_text = clean_text(get_first_infobox_text(get_page_html(name)))
-    print(infobox_text)
+    #print(infobox_text)
     pattern = r"Origin[s]?\s*(?P<origin>[\w\s,/\-–]+?)Genre"
     error_text = "Page infobox has no occupation information"
 
